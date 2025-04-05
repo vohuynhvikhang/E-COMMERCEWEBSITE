@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Chi Tiết Sản Phẩm</title>
+<link
+	href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+	rel="stylesheet">
+<style>
+.product-detail img {
+	width: 100%;
+	height: 500px;
+	object-fit: cover;
+}
+
+.product-description {
+	white-space: pre-line;
+}
+
+.product-price {
+	font-size: 24px;
+	color: #ff5722;
+}
+
+.related-products img {
+	width: 100%;
+	height: 300px;
+	object-fit: cover;
+}
+
+.card-img-top {
+	width: 100%;
+	height: 200px;
+	object-fit: cover;
+}
+</style>
+</head>
+<body>
+	<nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm">
+		<div class="container">
+			<a class="navbar-brand fw-bold" href="#">LENUP®</a>
+			<button class="navbar-toggler" type="button"
+				data-bs-toggle="collapse" data-bs-target="#navbarNav">
+				<span class="navbar-toggler-icon"></span>
+			</button>
+			<div class="collapse navbar-collapse" id="navbarNav">
+				<ul class="navbar-nav mx-auto">
+					<li class="nav-item"><a class="nav-link" href="/home">Trang
+							chủ</a></li>
+					<li class="nav-item"><a class="nav-link" href="/product">Sản
+							phẩm</a></li>
+					<li class="nav-item"><a class="nav-link" href="#">Store</a></li>
+					<li class="nav-item"><a class="nav-link" href="#">Giới
+							thiệu</a></li>
+				</ul>
+				<div class="d-flex align-items-center gap-3">
+					<form action="/product/search" method="GET" class="d-flex">
+						<input class="form-control me-2" type="search" name="keyword"
+							placeholder="Tìm kiếm sản phẩm..." th:value="${keyword}">
+						<button class="btn btn-outline-dark" type="submit">🔍</button>
+					</form>
+					<a href="/cart" class="btn btn-outline-dark position-relative">
+						🛒 </a>
+					<div class="dropdown">
+						<button class="btn btn-outline-dark dropdown-toggle" type="button"
+							id="accountDropdown" data-bs-toggle="dropdown"
+							aria-expanded="false">
+							👤 <span th:text="${user != null ? user.fullname : 'Tài khoản'}"></span>
+						</button>
+						<ul class="dropdown-menu" aria-labelledby="accountDropdown">
+							<li th:if="${user != null}"><a class="dropdown-item"
+								href="/orders">Quản lý đơn hàng</a></li>
+							<li th:if="${user != null}"><a class="dropdown-item"
+								href="/user/edit">Thay đổi thông tin</a></li>
+							<li th:if="${user != null}"><a
+								class="dropdown-item text-danger" href="/logout">Đăng xuất</a></li>
+							<li th:if="${user == null}"><a class="dropdown-item"
+								href="/login">Đăng nhập</a></li>
+							<li th:if="${user == null}"><a class="dropdown-item"
+								href="/register">Đăng ký</a></li>
+						</ul>
+					</div>
+				</div>
+			</div>
+		</div>
+	</nav>
+
+	<div class="container my-5">
+		<div class="row">
+			<div class="col-md-6">
+				<div class="product-detail">
+					<img th:src="${product.image}" alt="Product Image">
+				</div>
+			</div>
+			<div class="col-md-6">
+				<h3 th:text="${product.name}"></h3>
+				<strong class="text-danger"
+					th:text="${#numbers.formatInteger(product.price, 0, 'COMMA') + ' VND'}"></strong>
+				<p class="product-description" th:text="${product.description}"></p>
+				<!-- Nếu người dùng đã đăng nhập -->
+				<form th:if="${user != null}"
+					th:action="@{'/cart/add/' + ${product.id}}" method="POST"
+					class="d-inline">
+					<input type="hidden" name="productId" th:value="${product.id}" />
+					<input type="hidden" name="quantity" value="1" />
+					<button class="btn btn-dark" type="submit">Thêm vào giỏ
+						hàng</button>
+				</form>
+
+				<!-- Nếu người dùng chưa đăng nhập -->
+				<button th:if="${user == null}" class="btn btn-dark"
+					onclick="showLoginAlert()">Thêm vào giỏ hàng</button>
+
+				<script>
+					function showLoginAlert() {
+						alert('Vui lòng đăng nhập để thêm sản phẩm vào giỏ hàng!');
+					}
+				</script>
+
+				 <a href="/cart/checkout" class="btn btn-danger">Mua ngay</a>
+			</div>
+		</div>
+		<h3 class="mt-5">Sản phẩm cùng loại</h3>
+		<div class="row related-products">
+			<div class="col-md-4 mb-4"
+				th:each="relatedProduct : ${relatedProducts}">
+				<div class="card">
+					<a th:href="@{'/product/detail/' + ${relatedProduct.id}}"
+						class="text-dark text-decoration-none"> <img
+						th:src="${relatedProduct.image}" class="card-img-top"
+						alt="Related Product Image">
+						<div class="card-body text-center">
+							<h5 class="card-title" th:text="${relatedProduct.name}"></h5>
+							<strong class="text-danger"
+								th:text="${#numbers.formatInteger(relatedProduct.price, 0, 'COMMA') + ' VND'}"></strong>
+						</div>
+					</a>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<footer class="text-white py-5" style="background-color: #000000;">
+		<div class="container text-center">
+			<p class="mb-0">&copy; 2025 LENUP®. Tất cả các quyền được bảo
+				lưu.</p>
+		</div>
+	</footer>
+
+	<script
+		src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+	<script>
+		function showLoginAlert() {
+			alert("Bạn cần đăng nhập để thêm sản phẩm vào giỏ hàng!");
+			window.location.href = "/login";
+		}
+	</script>
+</body>
+</html>

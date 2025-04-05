@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Header Bootstrap</title>
+<link
+	href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+	rel="stylesheet">
+<style>
+.carousel-item img {
+	width: 100%;
+	height: 600px;
+	object-fit: cover;
+}
+</style>
+</head>
+<body>
+	<nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm">
+		<div class="container">
+			<!-- Logo -->
+			<a class="navbar-brand fw-bold" href="#">LENUP®</a>
+
+			<!-- Toggle button -->
+			<button class="navbar-toggler" type="button"
+				data-bs-toggle="collapse" data-bs-target="#navbarNav">
+				<span class="navbar-toggler-icon"></span>
+			</button>
+
+			<!-- Menu -->
+			<div class="collapse navbar-collapse" id="navbarNav">
+				<ul class="navbar-nav mx-auto">
+					<li class="nav-item"><a class="nav-link" th:href="@{/home}">Trang
+							chủ</a></li>
+					<li class="nav-item"><a class="nav-link" th:href="@{/product}">Sản
+							phẩm</a></li>
+					<li class="nav-item"><a class="nav-link" href="#">Store</a></li>
+					<li class="nav-item"><a class="nav-link" href="#">Giới
+							thiệu</a></li>
+				</ul>
+
+				<!-- Search bar, Cart & Account -->
+				<div class="d-flex align-items-center gap-3">
+					<form th:action="@{/product/search}" method="GET" class="d-flex">
+						<input class="form-control me-2" type="search" name="keyword"
+							placeholder="Tìm kiếm sản phẩm..." th:value="${keyword}">
+						<button class="btn btn-outline-dark" type="submit">🔍</button>
+					</form>
+					<a th:href="@{/cart}"
+						class="btn btn-outline-dark position-relative"> 🛒 </a>
+
+					<!-- Tài khoản dropdown -->
+					<div class="dropdown">
+						<button class="btn btn-outline-dark dropdown-toggle" type="button"
+							id="accountDropdown" data-bs-toggle="dropdown"
+							aria-expanded="false">
+							👤 <span
+								th:text="${session.user != null ? session.user.fullname : 'Tài khoản'}"></span>
+						</button>
+						<ul class="dropdown-menu" aria-labelledby="accountDropdown">
+							<li th:if="${session.user != null}"><a class="dropdown-item"
+								th:href="@{/orders}">Quản lý đơn hàng</a></li>
+							<li th:if="${session.user != null}"><a class="dropdown-item"
+								th:href="@{/user/edit}">Thay đổi thông tin</a></li>
+							<li th:if="${session.user != null}"><a
+								class="dropdown-item text-danger" th:href="@{/logout}">Đăng
+									xuất</a></li>
+							<li th:if="${session.user == null}"><a class="dropdown-item"
+								th:href="@{/login}">Đăng nhập</a></li>
+							<li th:if="${session.user == null}"><a class="dropdown-item"
+								th:href="@{/register}">Đăng ký</a></li>
+						</ul>
+					</div>
+				</div>
+			</div>
+		</div>
+	</nav>
+<div class="container mt-5">
+    <div class="card shadow-sm rounded-4 border-0">
+        <div class="card-body p-4">
+            <h3 class="mb-4 fw-bold text-dark">
+                Đơn hàng #<span th:text="${order.id}"></span>
+            </h3>
+
+            <!-- Thông tin người nhận -->
+            <div class="row g-4 mb-4">
+                <div class="col-md-6">
+                    <p class="mb-1 fw-semibold text-muted">Họ tên</p>
+                    <p class="fs-5" th:text="${order.fullname}"></p>
+
+                    <p class="mb-1 fw-semibold text-muted">Số điện thoại</p>
+                    <p class="fs-5" th:text="${order.phone}"></p>
+
+                    <p class="mb-1 fw-semibold text-muted">Địa chỉ</p>
+                    <p class="fs-5" th:text="${order.address}"></p>
+                </div>
+                <div class="col-md-6">
+                    <p class="mb-1 fw-semibold text-muted">Phương thức thanh toán</p>
+                    <p class="fs-5" th:text="${order.paymentMethod}"></p>
+
+                    <p class="mb-1 fw-semibold text-muted">Trạng thái</p>
+                    <p class="fs-5" th:text="${order.status}"></p>
+                </div>
+            </div>
+
+            <!-- Danh sách sản phẩm -->
+            <div class="table-responsive">
+                <table class="table table-hover align-middle">
+                    <thead class="table-light">
+                        <tr>
+                            <th class="text-center">Sản phẩm</th>
+                            <th class="text-center">Ảnh</th>
+                            <th class="text-center">Số lượng</th>
+                            <th class="text-center">Đơn giá</th>
+                            <th class="text-center">Thành tiền</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="item : ${order.orderDetail}" class="text-center">
+                            <td th:text="${item.product.name}" class="fw-medium"></td>
+                            <td>
+                                <img th:src="@{${item.product.image}}" alt="Ảnh sản phẩm"
+                                     class="img-fluid rounded" style="width: 60px; height: 60px;">
+                            </td>
+                            <td th:text="${item.quantity}"></td>
+                            <td th:text="${#numbers.formatDecimal(item.price, 0, 'COMMA', 2, 'POINT')} + ' đ'"></td>
+                            <td th:text="${#numbers.formatDecimal(item.price * item.quantity, 0, 'COMMA', 2, 'POINT')} + ' đ'"></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Tổng tiền -->
+            <div class="text-end mt-4">
+                <h5 class="fw-bold">
+                    Tổng tiền:
+                    <span class="text-danger"
+                          th:text="${#numbers.formatDecimal(order.totalPrice, 0, 'COMMA', 2, 'POINT')} + ' đ'"></span>
+                </h5>
+            </div>
+
+            <div class="mt-4">
+                <a th:href="@{/orders}" class="btn btn-outline-dark rounded-pill px-4">← Quay lại danh sách</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+	<!-- Footer -->
+	<footer class="text-white py-5" style="background-color: #000000;">
+		<div class="container">
+			<div class="text-center mt-4">
+				<p class="mb-0">&copy; 2025 LENUP®. Tất cả các quyền được bảo
+					lưu.</p>
+			</div>
+		</div>
+	</footer>
+
+	<!-- Scripts -->
+	<script src="https://kit.fontawesome.com/a076d05399.js"></script>
+	<script
+		src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

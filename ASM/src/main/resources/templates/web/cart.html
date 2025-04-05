@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Giỏ hàng</title>
+<link rel="stylesheet"
+	href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+</head>
+<body>
+	<nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm">
+		<div class="container">
+			<a class="navbar-brand fw-bold" href="#">LENUP®</a>
+			<button class="navbar-toggler" type="button"
+				data-bs-toggle="collapse" data-bs-target="#navbarNav">
+				<span class="navbar-toggler-icon"></span>
+			</button>
+			<div class="collapse navbar-collapse" id="navbarNav">
+				<ul class="navbar-nav mx-auto">
+					<li class="nav-item"><a class="nav-link" href="/home">Trang
+							chủ</a></li>
+					<li class="nav-item"><a class="nav-link" href="/product">Sản
+							phẩm</a></li>
+					<li class="nav-item"><a class="nav-link" href="#">Store</a></li>
+					<li class="nav-item"><a class="nav-link" href="#">Giới
+							thiệu</a></li>
+				</ul>
+				<div class="d-flex align-items-center gap-3">
+					<input class="form-control" type="search"
+						placeholder="Tìm kiếm sản phẩm..."> <a href="/cart"
+						class="btn btn-outline-dark position-relative"> 🛒 </a>
+					<div class="dropdown">
+						<button class="btn btn-outline-dark dropdown-toggle" type="button"
+							id="accountDropdown" data-bs-toggle="dropdown">
+							👤 <span
+								th:text="${session.user != null ? session.user.fullname : 'Tài khoản'}"></span>
+						</button>
+						<ul class="dropdown-menu">
+							<li th:if="${session.user != null}"><a class="dropdown-item"
+								href="/orders">Quản lý đơn hàng</a></li>
+							<li th:if="${session.user != null}"><a class="dropdown-item"
+								href="/user/edit">Thay đổi thông tin</a></li>
+							<li th:if="${session.user != null}"><a
+								class="dropdown-item text-danger" href="/logout">Đăng xuất</a></li>
+							<li th:if="${session.user == null}"><a class="dropdown-item"
+								href="/login">Đăng nhập</a></li>
+							<li th:if="${session.user == null}"><a class="dropdown-item"
+								href="/register">Đăng ký</a></li>
+						</ul>
+					</div>
+				</div>
+			</div>
+		</div>
+	</nav>
+	<div class="container my-5">
+    <h2 class="text-center text-dark fw-bold mb-4">Giỏ hàng của bạn</h2>
+
+    <div class="table-responsive">
+        <table class="table table-hover align-middle shadow-sm rounded-3 overflow-hidden">
+            <thead class="table-light text-center">
+                <tr>
+                    <th>Hình ảnh</th>
+                    <th>Tên sản phẩm</th>
+                    <th>Giá</th>
+                    <th>Số lượng</th>
+                    <th>Tổng tiền</th>
+                    <th>Thao tác</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="item : ${cartItems}" class="text-center">
+                    <td>
+                        <img th:src="@{${item.imageUrl}}" alt="Sản phẩm" class="img-thumbnail" style="width: 60px; height: 60px; object-fit: cover;">
+                    </td>
+                    <td th:text="${item.productName}" class="fw-medium text-dark"></td>
+                    <td th:text="${#numbers.formatInteger(item.price, 0, 'COMMA') + ' đ'}" class="text-danger fw-semibold"></td>
+                    <td>
+                        <form th:action="@{/cart/update/{productId}(productId=${item.productId})}" method="post" class="d-flex flex-column align-items-center">
+                            <input type="number" name="quantity" th:value="${item.quantity}" min="1"
+                                   class="form-control text-center mb-2" style="width: 80px;">
+                            <button type="submit" class="btn btn-sm btn-outline-primary rounded-pill px-3">
+                                <i class="bi bi-arrow-repeat"></i> Cập nhật
+                            </button>
+                        </form>
+                    </td>
+                    <td th:text="${#numbers.formatInteger(item.getTotalPrice(), 0, 'COMMA') + ' đ'}" class="fw-semibold text-success"></td>
+                    <td>
+                        <form th:action="@{/cart/remove/{productId}(productId=${item.productId})}" method="post">
+                            <button type="submit" class="btn btn-sm btn-outline-danger rounded-pill px-3">
+                                <i class="bi bi-trash3"></i> Xóa
+                            </button>
+                        </form>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="d-flex justify-content-between align-items-center mt-4 flex-column flex-md-row">
+        <h4 class="text-danger fw-bold">
+            Tổng cộng:
+            <span th:text="${#numbers.formatInteger(cartTotal, 0, 'COMMA') + ' đ'}"></span>
+        </h4>
+        <a href="/cart/checkout" class="btn btn-lg btn-success rounded-pill px-4 mt-3 mt-md-0">
+            <i class="bi bi-credit-card"></i> Thanh toán
+        </a>
+    </div>
+</div>
+
+
+
+	<!-- Footer -->
+	<footer class="text-white py-5" style="background-color: #000000;">
+		<div class="container">
+			<div class="row">
+				<div class="col-md-4 mb-4">
+					<h5 class="fw-bold">LENUP®</h5>
+					<p>LENUP® cung cấp các sản phẩm thời trang cao cấp với phong
+						cách độc đáo.</p>
+				</div>
+				<div class="col-md-4 mb-4">
+					<h5 class="fw-bold">Liên kết nhanh</h5>
+					<ul class="list-unstyled">
+						<li><a href="#" class="text-white text-decoration-none">Trang
+								chủ</a></li>
+						<li><a href="#" class="text-white text-decoration-none">Sản
+								phẩm</a></li>
+					</ul>
+				</div>
+				<div class="col-md-4 mb-4">
+					<h5 class="fw-bold">Theo dõi chúng tôi</h5>
+				</div>
+			</div>
+		</div>
+	</footer>
+
+	<!-- Bootstrap JS -->
+	<script
+		src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
