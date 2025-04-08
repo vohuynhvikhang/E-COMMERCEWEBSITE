@@ -43,6 +43,7 @@ public class CartController {
 
         Map<Long, CartItem> cart = cartService.getCartFromCookie(request);
         double total = cartService.getTotalPrice(cart);
+        
 
         model.addAttribute("cartItems", cart.values());
         model.addAttribute("cartTotal", total);

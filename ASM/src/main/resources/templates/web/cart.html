@@ -6,46 +6,84 @@
 <title>Giỏ hàng</title>
 <link rel="stylesheet"
 	href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+	<link
+	href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css"
+	rel="stylesheet">
 </head>
 <body>
-	<nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm">
-		<div class="container">
-			<a class="navbar-brand fw-bold" href="#">LENUP®</a>
+	<nav class="navbar navbar-expand-lg bg-white shadow-sm sticky-top">
+		<div class="container py-2">
+			<!-- Logo -->
+			<a class="navbar-brand fw-bold fs-4 text-dark" href="#">LENUP<span
+				class="text-dark">®</span></a>
+
+			<!-- Toggle button -->
 			<button class="navbar-toggler" type="button"
 				data-bs-toggle="collapse" data-bs-target="#navbarNav">
 				<span class="navbar-toggler-icon"></span>
 			</button>
+
+			<!-- Navbar content -->
 			<div class="collapse navbar-collapse" id="navbarNav">
-				<ul class="navbar-nav mx-auto">
-					<li class="nav-item"><a class="nav-link" href="/home">Trang
-							chủ</a></li>
-					<li class="nav-item"><a class="nav-link" href="/product">Sản
-							phẩm</a></li>
-					<li class="nav-item"><a class="nav-link" href="#">Store</a></li>
-					<li class="nav-item"><a class="nav-link" href="#">Giới
+				<!-- Menu -->
+				<ul class="navbar-nav mx-auto mb-2 mb-lg-0 gap-lg-4">
+					<li class="nav-item"><a class="nav-link fw-semibold"
+						th:href="@{/home}">Trang chủ</a></li>
+					<li class="nav-item"><a class="nav-link fw-semibold"
+						th:href="@{/product}">Sản phẩm</a></li>
+					<li class="nav-item"><a class="nav-link fw-semibold" href="#">Cửa
+							hàng</a></li>
+					<li class="nav-item"><a class="nav-link fw-semibold" href="#">Giới
 							thiệu</a></li>
 				</ul>
+
+				<!-- Right-side tools -->
 				<div class="d-flex align-items-center gap-3">
-					<input class="form-control" type="search"
-						placeholder="Tìm kiếm sản phẩm..."> <a href="/cart"
-						class="btn btn-outline-dark position-relative"> 🛒 </a>
+					<!-- Search -->
+					<form th:action="@{/product/search}" method="GET" class="d-flex">
+						<input class="form-control form-control-sm me-2 rounded-pill px-3"
+							type="search" name="keyword" placeholder="Tìm sản phẩm..."
+							th:value="${keyword}">
+					</form>
+
+					<!-- Cart -->
+					<a href="/cart" class="btn btn-outline-dark position-relative">
+						🛒 
+					</a>
+
+
+
+
+					<!-- Account dropdown -->
 					<div class="dropdown">
-						<button class="btn btn-outline-dark dropdown-toggle" type="button"
-							id="accountDropdown" data-bs-toggle="dropdown">
-							👤 <span
+						<button
+							class="btn btn-outline-dark btn-sm rounded-pill px-3 dropdown-toggle"
+							type="button" id="accountDropdown" data-bs-toggle="dropdown"
+							aria-expanded="false">
+							<i class="bi bi-person-circle me-1"></i> <span
 								th:text="${session.user != null ? session.user.fullname : 'Tài khoản'}"></span>
 						</button>
-						<ul class="dropdown-menu">
+						<ul class="dropdown-menu dropdown-menu-end"
+							aria-labelledby="accountDropdown">
 							<li th:if="${session.user != null}"><a class="dropdown-item"
-								href="/orders">Quản lý đơn hàng</a></li>
+								th:href="@{/orders}"> <i class="bi bi-receipt"></i> Đơn hàng
+							</a></li>
 							<li th:if="${session.user != null}"><a class="dropdown-item"
-								href="/user/edit">Thay đổi thông tin</a></li>
+								th:href="@{/user/edit}"> <i class="bi bi-pencil-square"></i>
+									Thông tin cá nhân
+							</a></li>
 							<li th:if="${session.user != null}"><a
-								class="dropdown-item text-danger" href="/logout">Đăng xuất</a></li>
+								class="dropdown-item text-danger" th:href="@{/logout}"> <i
+									class="bi bi-box-arrow-right"></i> Đăng xuất
+							</a></li>
 							<li th:if="${session.user == null}"><a class="dropdown-item"
-								href="/login">Đăng nhập</a></li>
+								th:href="@{/login}"> <i class="bi bi-box-arrow-in-right"></i>
+									Đăng nhập
+							</a></li>
 							<li th:if="${session.user == null}"><a class="dropdown-item"
-								href="/register">Đăng ký</a></li>
+								th:href="@{/register}"> <i class="bi bi-person-plus"></i>
+									Đăng ký
+							</a></li>
 						</ul>
 					</div>
 				</div>
@@ -111,28 +149,37 @@
 
 	<!-- Footer -->
 	<footer class="text-white py-5" style="background-color: #000000;">
-		<div class="container">
-			<div class="row">
-				<div class="col-md-4 mb-4">
-					<h5 class="fw-bold">LENUP®</h5>
-					<p>LENUP® cung cấp các sản phẩm thời trang cao cấp với phong
-						cách độc đáo.</p>
-				</div>
-				<div class="col-md-4 mb-4">
-					<h5 class="fw-bold">Liên kết nhanh</h5>
-					<ul class="list-unstyled">
-						<li><a href="#" class="text-white text-decoration-none">Trang
-								chủ</a></li>
-						<li><a href="#" class="text-white text-decoration-none">Sản
-								phẩm</a></li>
-					</ul>
-				</div>
-				<div class="col-md-4 mb-4">
-					<h5 class="fw-bold">Theo dõi chúng tôi</h5>
-				</div>
-			</div>
-		</div>
-	</footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-4 mb-4">
+                <h5 class="fw-bold">LENUP®</h5>
+                <p>LENUP® cung cấp các sản phẩm thời trang cao cấp cho mọi lứa tuổi với chất lượng vượt trội và phong cách độc đáo.</p>
+            </div>
+            <div class="col-md-4 mb-4">
+                <h5 class="fw-bold">Liên kết nhanh</h5>
+                <ul class="list-unstyled">
+                    <li><a href="#" class="text-white text-decoration-none">Trang chủ</a></li>
+                    <li><a href="#" class="text-white text-decoration-none">Sản phẩm</a></li>
+                    <li><a href="#" class="text-white text-decoration-none">Store</a></li>
+                    <li><a href="#" class="text-white text-decoration-none">Giới thiệu</a></li>
+                    <li><a href="#" class="text-white text-decoration-none">Liên hệ</a></li>
+                </ul>
+            </div>
+            <div class="col-md-4 mb-4">
+                <h5 class="fw-bold">Theo dõi chúng tôi</h5>
+                <ul class="list-unstyled d-flex gap-3">
+                    <li><a href="#" class="text-white"><i class="fab fa-facebook-f"></i> Facebook</a></li>
+                    <li><a href="#" class="text-white"><i class="fab fa-instagram"></i> Instagram</a></li>
+                    <li><a href="#" class="text-white"><i class="fab fa-twitter"></i> Twitter</a></li>
+                    <li><a href="#" class="text-white"><i class="fab fa-youtube"></i> YouTube</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="text-center mt-4">
+            <p class="mb-0">&copy; 2025 LENUP®. Tất cả các quyền được bảo lưu.</p>
+        </div>
+    </div>
+</footer>
 
 	<!-- Bootstrap JS -->
 	<script

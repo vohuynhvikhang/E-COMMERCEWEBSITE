@@ -74,11 +74,12 @@
 			<artifactId>mssql-jdbc</artifactId>
 		</dependency>
 		<!-- Thêm vào pom.xml nếu chưa có -->
-<dependency>
-    <groupId>jakarta.servlet</groupId>
-    <artifactId>jakarta.servlet-api</artifactId>
-    <scope>provided</scope>
-</dependency>
+		<dependency>
+			<groupId>jakarta.servlet</groupId>
+			<artifactId>jakarta.servlet-api</artifactId>
+			<scope>provided</scope>
+		</dependency>
+
 
 		<!--  Spring Boot Starter Data JPA  -->
 		<dependency>
