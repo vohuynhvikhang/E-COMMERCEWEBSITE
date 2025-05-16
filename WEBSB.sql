@@ -1,4 +1,4 @@
-﻿USE master
+USE master
  CREATE DATABASE WEBSB
  USE WEBSB
 
@@ -20,13 +20,13 @@ CREATE TABLE Categories (
 );
 
 CREATE TABLE Products (
-    id INT PRIMARY KEY IDENTITY(1,1),
+    id BIGINT PRIMARY KEY IDENTITY(1,1),
     name NVARCHAR(255) NOT NULL,
     description NVARCHAR(500),
     price DECIMAL(18,2) NOT NULL,
     stock INT NOT NULL,
     image NVARCHAR(255),
-    category_id INT FOREIGN KEY REFERENCES Categories(id)
+    category_id INT NOT NULL FOREIGN KEY REFERENCES Categories(id) 
 );
 
 CREATE TABLE Orderss (
@@ -36,14 +36,17 @@ CREATE TABLE Orderss (
     address NVARCHAR(255) NOT NULL,            
     payment_method NVARCHAR(50) NOT NULL,      
     total_price FLOAT NOT NULL,                 
-    order_date DATETIME DEFAULT GETDATE()       
+    order_date DATETIME DEFAULT GETDATE()
 );
 ALTER TABLE Orderss ADD status VARCHAR(255);
+ALTER TABLE Orderss
+ADD user_id INT FOREIGN KEY REFERENCES Users(id);
 
-CREATE TABLE OrderDetails (
+
+CREATE TABLE order_details (
     id INT PRIMARY KEY IDENTITY(1,1),
-    order_id INT FOREIGN KEY REFERENCES Orders(id),
-    product_id INT FOREIGN KEY REFERENCES Products(id),
+    order_id BIGINT FOREIGN KEY REFERENCES Orderss(id),
+    product_id BIGINT FOREIGN KEY REFERENCES Products(id),
     quantity INT NOT NULL,
     price DECIMAL(18,2) NOT NULL
 );
