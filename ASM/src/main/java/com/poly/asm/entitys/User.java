@@ -23,5 +23,9 @@ public class User {
     private String address;
     private String role;
     private Boolean active;
+<<<<<<< HEAD
 }
 //dit me may Long lon` nhu con cac ma hay di ra gio
+=======
+}
+>>>>>>> e7e5a2628c6779116d58777935f00e5a64eba72c
