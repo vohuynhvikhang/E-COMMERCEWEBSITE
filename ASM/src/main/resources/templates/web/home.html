@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Header Bootstrap</title>
+<link
+	href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+	rel="stylesheet">
+<link
+	href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css"
+	rel="stylesheet">
+
+<style>
+.carousel-item img {
+	width: 100%;
+	height: 600px;
+	object-fit: cover;
+}
+</style>
+</head>
+<body>
+	<nav class="navbar navbar-expand-lg bg-white shadow-sm sticky-top">
+		<div class="container py-2">
+			<!-- Logo -->
+			<a class="navbar-brand fw-bold fs-4 text-dark" href="#">LENUP<span
+				class="text-dark">®</span></a>
+
+			<!-- Toggle button -->
+			<button class="navbar-toggler" type="button"
+				data-bs-toggle="collapse" data-bs-target="#navbarNav">
+				<span class="navbar-toggler-icon"></span>
+			</button>
+
+			<!-- Navbar content -->
+			<div class="collapse navbar-collapse" id="navbarNav">
+				<!-- Menu -->
+				<ul class="navbar-nav mx-auto mb-2 mb-lg-0 gap-lg-4">
+					<li class="nav-item"><a class="nav-link fw-semibold"
+						th:href="@{/home}">Trang chủ</a></li>
+					<li class="nav-item"><a class="nav-link fw-semibold"
+						th:href="@{/product}">Sản phẩm</a></li>
+					<li class="nav-item"><a class="nav-link fw-semibold" href="#">Cửa
+							hàng</a></li>
+					<li class="nav-item"><a class="nav-link fw-semibold" href="#">Giới
+							thiệu</a></li>
+				</ul>
+
+				<!-- Right-side tools -->
+				<div class="d-flex align-items-center gap-3">
+					<!-- Search -->
+					<form th:action="@{/product/search}" method="GET" class="d-flex">
+						<input class="form-control form-control-sm me-2 rounded-pill px-3"
+							type="search" name="keyword" placeholder="Tìm sản phẩm..."
+							th:value="${keyword}">
+					</form>
+
+					<!-- Cart -->
+					<a href="/cart" class="btn btn-outline-dark position-relative">
+						🛒 
+					</a>
+
+
+
+
+					<!-- Account dropdown -->
+					<div class="dropdown">
+						<button
+							class="btn btn-outline-dark btn-sm rounded-pill px-3 dropdown-toggle"
+							type="button" id="accountDropdown" data-bs-toggle="dropdown"
+							aria-expanded="false">
+							<i class="bi bi-person-circle me-1"></i> <span
+								th:text="${session.user != null ? session.user.fullname : 'Tài khoản'}"></span>
+						</button>
+						<ul class="dropdown-menu dropdown-menu-end"
+							aria-labelledby="accountDropdown">
+							<li th:if="${session.user != null}"><a class="dropdown-item"
+								th:href="@{/orders}"> <i class="bi bi-receipt"></i> Đơn hàng
+							</a></li>
+							<li th:if="${session.user != null}"><a class="dropdown-item"
+								th:href="@{/user/edit}"> <i class="bi bi-pencil-square"></i>
+									Thông tin cá nhân
+							</a></li>
+							<li th:if="${session.user != null}"><a
+								class="dropdown-item text-danger" th:href="@{/logout}"> <i
+									class="bi bi-box-arrow-right"></i> Đăng xuất
+							</a></li>
+							<li th:if="${session.user == null}"><a class="dropdown-item"
+								th:href="@{/login}"> <i class="bi bi-box-arrow-in-right"></i>
+									Đăng nhập
+							</a></li>
+							<li th:if="${session.user == null}"><a class="dropdown-item"
+								th:href="@{/register}"> <i class="bi bi-person-plus"></i>
+									Đăng ký
+							</a></li>
+						</ul>
+					</div>
+				</div>
+			</div>
+		</div>
+	</nav>
+
+
+<!-- Slideshow -->
+<div id="carouselExampleIndicators" class="carousel slide container" data-bs-ride="carousel" data-bs-interval="4000">
+    <div class="carousel-indicators">
+        <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+        <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="1" aria-label="Slide 2"></button>
+        <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="2" aria-label="Slide 3"></button>
+    </div>
+    <div class="carousel-inner">
+        <div class="carousel-item active">
+            <img th:src="@{/images/1(edited).jpg}" class="d-block w-100 rounded-3" alt="Slide 1">
+            <div class="carousel-caption d-none d-md-block text-start">
+                <h5 class="display-4 fw-bold text-shadow">Sản phẩm mới nhất</h5>
+                <p class="lead text-shadow">Khám phá bộ sưu tập thời trang mới nhất cho mùa này.</p>
+            </div>
+        </div>
+        <div class="carousel-item">
+            <img th:src="@{/images/2(edited).jpg}" class="d-block w-100 rounded-3" alt="Slide 2">
+            <div class="carousel-caption d-none d-md-block text-end">
+                <h5 class="display-4 fw-bold text-shadow">Phong cách hiện đại</h5>
+                <p class="lead text-shadow">Chọn lựa phong cách của bạn với những sản phẩm chất lượng cao.</p>
+            </div>
+        </div>
+        <div class="carousel-item">
+            <img th:src="@{/images/cp.png}" class="d-block w-100 rounded-3" alt="Slide 3">
+            <div class="carousel-caption d-none d-md-block text-center">
+                <h5 class="display-4 fw-bold text-shadow">Thời trang đẳng cấp</h5>
+                <p class="lead text-shadow">Bộ sưu tập độc đáo, chất liệu cao cấp, phù hợp với mọi xu hướng.</p>
+            </div>
+        </div>
+    </div>
+    <!-- Điều hướng mượt mà -->
+    <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="prev">
+        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Previous</span>
+    </button>
+    <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="next">
+        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Next</span>
+    </button>
+</div>
+
+<!-- Thêm Bootstrap JS nếu chưa bao gồm -->
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+
+
+	<!-- Footer -->
+	<footer class="text-white py-5" style="background-color: #000000;">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-4 mb-4">
+                <h5 class="fw-bold">LENUP®</h5>
+                <p>LENUP® cung cấp các sản phẩm thời trang cao cấp cho mọi lứa tuổi với chất lượng vượt trội và phong cách độc đáo.</p>
+            </div>
+            <div class="col-md-4 mb-4">
+                <h5 class="fw-bold">Liên kết nhanh</h5>
+                <ul class="list-unstyled">
+                    <li><a href="#" class="text-white text-decoration-none">Trang chủ</a></li>
+                    <li><a href="#" class="text-white text-decoration-none">Sản phẩm</a></li>
+                    <li><a href="#" class="text-white text-decoration-none">Store</a></li>
+                    <li><a href="#" class="text-white text-decoration-none">Giới thiệu</a></li>
+                    <li><a href="#" class="text-white text-decoration-none">Liên hệ</a></li>
+                </ul>
+            </div>
+            <div class="col-md-4 mb-4">
+                <h5 class="fw-bold">Theo dõi chúng tôi</h5>
+                <ul class="list-unstyled d-flex gap-3">
+                    <li><a href="#" class="text-white"><i class="fab fa-facebook-f"></i> Facebook</a></li>
+                    <li><a href="#" class="text-white"><i class="fab fa-instagram"></i> Instagram</a></li>
+                    <li><a href="#" class="text-white"><i class="fab fa-twitter"></i> Twitter</a></li>
+                    <li><a href="#" class="text-white"><i class="fab fa-youtube"></i> YouTube</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="text-center mt-4">
+            <p class="mb-0">&copy; 2025 LENUP®. Tất cả các quyền được bảo lưu.</p>
+        </div>
+    </div>
+</footer>
+
+	<!-- Scripts -->
+	<script src="https://kit.fontawesome.com/a076d05399.js"></script>
+	<script
+		src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
