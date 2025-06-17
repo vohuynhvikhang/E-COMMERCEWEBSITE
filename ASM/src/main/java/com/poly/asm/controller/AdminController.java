@@ -424,7 +424,6 @@ public class AdminController {
             redirectAttributes.addFlashAttribute("error", "Không tìm thấy danh mục!");
             return "redirect:/admin/categories";
         }
-
         model.addAttribute("category", categoryOpt.get());
         return "admin/categories";
     }
@@ -436,7 +435,6 @@ public class AdminController {
             redirectAttributes.addFlashAttribute("error", "Không tìm thấy danh mục!");
             return "redirect:/admin/categories";
         }
-
         category.setId(id);
         categoryRepository.save(category);
         redirectAttributes.addFlashAttribute("success", "Danh mục đã được cập nhật!");
@@ -445,11 +443,26 @@ public class AdminController {
 
     @GetMapping("/categories/delete/{id}")
     public String deleteCategory(@PathVariable Long id, RedirectAttributes redirectAttributes) {
-        if (categoryRepository.existsById(id)) {
+        try {
+            // Kiểm tra xem danh mục có tồn tại không
+            if (!categoryRepository.existsById(id)) {
+                throw new EntityNotFoundException("Không tìm thấy danh mục với ID: " + id);
+            }
+
+            // Kiểm tra số lượng sản phẩm liên kết
+            Long productCount = categoryRepository.countProductsByCategoryId(id);
+            if (productCount > 0) {
+                redirectAttributes.addFlashAttribute("error", "Danh mục chứa sản phẩm, không thể xóa!");
+                return "redirect:/admin/categories";
+            }
+
+            // Xóa danh mục nếu không có sản phẩm
             categoryRepository.deleteById(id);
             redirectAttributes.addFlashAttribute("success", "Danh mục đã được xóa!");
-        } else {
-            redirectAttributes.addFlashAttribute("error", "Không tìm thấy danh mục!");
+        } catch (EntityNotFoundException e) {
+            redirectAttributes.addFlashAttribute("error", e.getMessage());
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("error", "Đã xảy ra lỗi khi xóa danh mục!");
         }
         return "redirect:/admin/categories";
     }
