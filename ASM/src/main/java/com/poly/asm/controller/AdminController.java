@@ -3,6 +3,8 @@ package com.poly.asm.controller;
 import com.poly.asm.daos.*;
 import com.poly.asm.entitys.*;
 import com.poly.asm.services.OrderService;
+
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -401,7 +403,7 @@ public class AdminController {
         return "redirect:/admin/variants";
     }
 
-    // ----------- QUẢN LÝ DANH MỤC -----------
+ // ----------- QUẢN LÝ DANH MỤC -----------
 
     @GetMapping("/categories")
     public String listCategories(Model model) {
@@ -466,7 +468,6 @@ public class AdminController {
         }
         return "redirect:/admin/categories";
     }
-
     // ----------- QUẢN LÝ NGƯỜI DÙNG -----------
 
  // Danh sách người dùng

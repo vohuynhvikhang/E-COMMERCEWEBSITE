@@ -36,12 +36,12 @@ public class User {
 
     private String address;
 
-    @Column(columnDefinition = "NVARCHAR(20) CHECK (role IN ('USER', 'ADMIN')) DEFAULT 'USER'")
+    @Column(columnDefinition = "NVARCHAR(20) CHECK (role IN ('USER', 'ADMIN', 'STAFF')) DEFAULT 'USER'")
     private String role;
 
     private Boolean active;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
-    @OnDelete(action = OnDeleteAction.CASCADE) // Thêm annotation này
-    private List<Cart> carts; // Thêm trường này để ánh xạ mối quan hệ
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    private List<Cart> carts;
 }

@@ -65,7 +65,14 @@ public class AuthController {
             response.addCookie(userIdCookie);
 
             // Chuyển hướng dựa trên role
-            return user.getRole().equalsIgnoreCase("ADMIN") ? "redirect:/admin/index" : "redirect:/home";
+            String role = user.getRole();
+            if ("ADMIN".equalsIgnoreCase(role)) {
+                return "redirect:/admin/index";
+            } else if ("STAFF".equalsIgnoreCase(role)) {
+                return "redirect:/staff/index";
+            } else {
+                return "redirect:/home";
+            }
         } else {
             model.addAttribute("message", "Sai tài khoản, mật khẩu hoặc tài khoản bị khóa!");
             return "web/login";

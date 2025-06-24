@@ -20,6 +20,9 @@ public class AuthInterceptor implements HandlerInterceptor {
     private static final List<String> ADMIN_REQUIRED_URLS = Arrays.asList(
             "/admin/"
     );
+    private static final List<String> STAFF_REQUIRED_URLS = Arrays.asList(
+            "/staff/"
+    );
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
@@ -40,11 +43,22 @@ public class AuthInterceptor implements HandlerInterceptor {
             }
         }
 
+        if (STAFF_REQUIRED_URLS.stream().anyMatch(uri::startsWith)) {
+            if (user == null || !isStaff(user)) {
+                response.sendRedirect("/account/login?error=Bạn không có quyền truy cập");
+                return false;
+            }
+        }
+
         return true;
     }
 
     private boolean isAdmin(Object user) {
         return user instanceof User && "ADMIN".equals(((User) user).getRole());
+    }
+
+    private boolean isStaff(Object user) {
+        return user instanceof User && "STAFF".equals(((User) user).getRole());
     }
 
     @Override

@@ -14,7 +14,7 @@ CREATE TABLE Users (
     fullname NVARCHAR(100),
     phone NVARCHAR(10),
     address NVARCHAR(255),
-    role NVARCHAR(20) CHECK (role IN ('USER', 'ADMIN')) DEFAULT 'USER',
+    role NVARCHAR(20) CHECK (role IN ('USER', 'ADMIN', 'STAFF')) DEFAULT 'USER',
     active BIT DEFAULT 1
 );
 
@@ -97,5 +97,7 @@ CREATE TABLE CartItems (
 INSERT INTO Users (username, password, email, fullname, phone, address, role, active) VALUES
 ('admin', '123456', 'admin@example.com', 'Admin User', '0123456789', 'Hanoi, Vietnam', 'ADMIN', 1),
 ('user1', 'password1', 'user1@example.com', 'User One', '0987654321', 'HCMC, Vietnam', 'USER', 1),
-('user2', 'password2', 'user2@example.com', 'User Two', '0912345678', 'Da Nang, Vietnam', 'USER', 1);
+('user2', 'password2', 'user2@example.com', 'User Two', '0912345678', 'Da Nang, Vietnam', 'USER', 1),
+('staff1', 'password123', 'staff1@example.com', 'Staff One', '0931234567', 'Hanoi, Vietnam', 'STAFF', 1);
+
 
