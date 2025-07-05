@@ -29,6 +29,14 @@
         <java.version>21</java.version>
     </properties>
     <dependencies>
+	    <dependency>
+		    <groupId>org.springframework.boot</groupId>
+		    <artifactId>spring-boot-starter-security</artifactId>
+		</dependency>
+		<dependency>
+		    <groupId>org.springframework.boot</groupId>
+		    <artifactId>spring-boot-starter-oauth2-client</artifactId>
+		</dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
@@ -97,7 +105,6 @@
             <version>7.7.0</version>
             <scope>test</scope>
         </dependency>
-        <!-- Không cần thêm slf4j-api, logback-classic, spring-boot-starter-logging vì đã bao gồm trong spring-boot-starter -->
     </dependencies>
     <build>
         <plugins>

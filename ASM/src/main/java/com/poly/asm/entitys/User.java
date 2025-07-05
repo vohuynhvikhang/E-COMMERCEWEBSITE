@@ -41,6 +41,12 @@ public class User {
 
     private Boolean active;
 
+    @Column(columnDefinition = "NVARCHAR(50)")
+    private String provider;
+    
+    @Column(columnDefinition = "NVARCHAR(255)")
+    private String providerId;
+
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     @OnDelete(action = OnDeleteAction.CASCADE)
     private List<Cart> carts;

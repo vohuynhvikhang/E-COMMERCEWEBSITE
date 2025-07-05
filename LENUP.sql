@@ -15,7 +15,9 @@ CREATE TABLE Users (
     phone NVARCHAR(10),
     address NVARCHAR(255),
     role NVARCHAR(20) CHECK (role IN ('USER', 'ADMIN', 'STAFF')) DEFAULT 'USER',
-    active BIT DEFAULT 1
+    active BIT DEFAULT 1,
+    provider NVARCHAR(50)
+    providerId NVARCHAR(255)
 );
 
 -- Bảng Categories
@@ -24,7 +26,7 @@ CREATE TABLE Categories (
     name NVARCHAR(100) UNIQUE NOT NULL
 );
 
--- Bảng Products (xóa cột image)
+-- Bảng Products
 CREATE TABLE Products (
     id BIGINT PRIMARY KEY IDENTITY(1,1),
     name NVARCHAR(255) NOT NULL,
@@ -43,7 +45,7 @@ CREATE TABLE ProductVariants (
     UNIQUE(product_id, size, color)
 );
 
--- Bảng ProductImages (thêm variant_id)
+-- Bảng ProductImages
 CREATE TABLE ProductImages (
     id BIGINT PRIMARY KEY IDENTITY(1,1),
     product_id BIGINT FOREIGN KEY REFERENCES Products(id),
@@ -51,7 +53,7 @@ CREATE TABLE ProductImages (
     image_url NVARCHAR(255) NOT NULL
 );
 
--- Bảng Orders (đổi tên từ Orderss)
+-- Bảng Orders
 CREATE TABLE Orders (
     id BIGINT IDENTITY(1,1) PRIMARY KEY,      
     fullname NVARCHAR(255) NOT NULL,         

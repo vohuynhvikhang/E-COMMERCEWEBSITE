@@ -16,7 +16,9 @@ public interface UserRepository extends JpaRepository<User, Integer> { // Đổi
 
     // Tìm người dùng theo tên người dùng
     User findByUsername(String username);
-
+    User findByUsernameAndProvider(String username, String provider);
+    User findByProviderIdAndProvider(String providerId, String provider);
+    
     @Modifying
     @Transactional
     @Query("DELETE FROM User u WHERE u.email = :email")

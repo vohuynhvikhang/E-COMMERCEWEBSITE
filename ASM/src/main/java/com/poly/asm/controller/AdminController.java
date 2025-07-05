@@ -10,6 +10,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
@@ -19,7 +20,6 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.io.File;
 import java.io.IOException;
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -59,10 +59,10 @@ public class AdminController {
     private CartItemRepository cartItemRepository;
 
     private static final Logger logger = LoggerFactory.getLogger(AdminController.class);
-    
- // ----------- QUẢN LÝ ĐƠN HÀNG -----------
 
- // Danh sách đơn hàng
+    // ----------- QUẢN LÝ ĐƠN HÀNG -----------
+
+    // Danh sách đơn hàng
     @GetMapping("/orders")
     public String listOrders(Model model) {
         model.addAttribute("orders", orderRepository.findAll());
@@ -152,7 +152,6 @@ public class AdminController {
         model.addAttribute("product", new Product()); // Đảm bảo product mới cho form
         return "admin/products";
     }
-
 
     // Lớp phụ để gộp sản phẩm và biến thể
     class ProductGroup {
@@ -403,7 +402,7 @@ public class AdminController {
         return "redirect:/admin/variants";
     }
 
- // ----------- QUẢN LÝ DANH MỤC -----------
+    // ----------- QUẢN LÝ DANH MỤC -----------
 
     @GetMapping("/categories")
     public String listCategories(Model model) {
@@ -432,7 +431,7 @@ public class AdminController {
 
     @PostMapping("/categories/update/{id}")
     public String updateCategory(@PathVariable Long id, @ModelAttribute Category category,
-                                 RedirectAttributes redirectAttributes) {
+                                RedirectAttributes redirectAttributes) {
         if (!categoryRepository.existsById(id)) {
             redirectAttributes.addFlashAttribute("error", "Không tìm thấy danh mục!");
             return "redirect:/admin/categories";
@@ -468,9 +467,10 @@ public class AdminController {
         }
         return "redirect:/admin/categories";
     }
+
     // ----------- QUẢN LÝ NGƯỜI DÙNG -----------
 
- // Danh sách người dùng
+    // Danh sách người dùng
     @GetMapping("/users")
     public String listUsers(Model model) {
         model.addAttribute("users", userRepository.findAll());
@@ -481,11 +481,16 @@ public class AdminController {
     // Lưu người dùng (thêm mới)
     @PostMapping("/users/save")
     public String saveUser(@ModelAttribute User user, RedirectAttributes redirectAttributes) {
-        // TODO: Mã hóa mật khẩu bằng BCrypt trước khi lưu
         try {
+            if (user.getPassword() != null && !user.getPassword().isEmpty()) {
+                user.setPassword(new BCryptPasswordEncoder().encode(user.getPassword()));
+            }
+            user.setProvider("form"); // Mặc định cho người dùng thêm mới
+            user.setProviderId(null); // Không cần providerId cho form
             userRepository.save(user);
             redirectAttributes.addFlashAttribute("success", "Người dùng đã được lưu thành công!");
         } catch (Exception e) {
+            logger.error("Failed to save user: {}", e.getMessage(), e);
             redirectAttributes.addFlashAttribute("error", "Lỗi khi lưu người dùng: " + e.getMessage());
         }
         return "redirect:/admin/users";
@@ -505,17 +510,34 @@ public class AdminController {
 
     // Cập nhật người dùng
     @PostMapping("/users/update/{id}")
+    @Transactional
     public String updateUser(@PathVariable Integer id, @ModelAttribute User user, RedirectAttributes redirectAttributes) {
-        if (!userRepository.existsById(id)) {
+        Optional<User> existingUserOpt = userRepository.findById(id);
+        if (!existingUserOpt.isPresent()) {
             redirectAttributes.addFlashAttribute("error", "Không tìm thấy người dùng!");
             return "redirect:/admin/users";
         }
-        user.setId(id);
-        // TODO: Mã hóa mật khẩu nếu cập nhật
+
+        User existingUser = existingUserOpt.get();
         try {
+            // Giữ nguyên provider và providerId
+            user.setProvider(existingUser.getProvider());
+            user.setProviderId(existingUser.getProviderId());
+
+            // Chỉ mã hóa mật khẩu nếu được cung cấp
+            if (user.getPassword() != null && !user.getPassword().isEmpty()) {
+                user.setPassword(new BCryptPasswordEncoder().encode(user.getPassword()));
+            } else {
+                user.setPassword(existingUser.getPassword()); // Giữ mật khẩu cũ
+            }
+
+            // Cập nhật các trường khác
+            user.setId(id);
             userRepository.save(user);
+            logger.info("Updated user with ID: {}, username: {}, role: {}", id, user.getUsername(), user.getRole());
             redirectAttributes.addFlashAttribute("success", "Thông tin người dùng đã được cập nhật!");
         } catch (Exception e) {
+            logger.error("Failed to update user with ID: {}: {}", id, e.getMessage(), e);
             redirectAttributes.addFlashAttribute("error", "Lỗi khi cập nhật người dùng: " + e.getMessage());
         }
         return "redirect:/admin/users";
