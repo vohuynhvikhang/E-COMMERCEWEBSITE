@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+<div th:fragment="siteFooter">
+  <footer class="text-white py-5" style="background-color: #000;">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-4 mb-4">
+          <h5 class="fw-bold fs-4">LENUP®</h5>
+          <p class="mb-2">Thời trang cao cấp mang đậm dấu ấn cá nhân – sang trọng, bền vững và đầy phong cách.</p>
+          <ul class="list-unstyled small opacity-75">
+            <li><i class="fas fa-certificate text-warning me-2"></i>Thương hiệu thời trang Việt cao cấp</li>
+            <li><i class="fas fa-check-circle text-success me-2"></i>100% sản phẩm chính hãng</li>
+            <li><i class="fas fa-globe-asia text-info me-2"></i>Giao hàng toàn quốc & quốc tế</li>
+          </ul>
+        </div>
+        <div class="col-md-2 mb-4">
+          <h5 class="fw-bold">Liên kết nhanh</h5>
+          <ul class="list-unstyled lh-lg">
+            <li><a th:href="@{/home}" class="text-white text-decoration-none">Trang chủ</a></li>
+            <li><a th:href="@{/product}" class="text-white text-decoration-none">Sản phẩm</a></li>
+            <li><a th:href="@{/introduction}" class="text-white text-decoration-none">Giới thiệu</a></li>
+<!--             <li><a href="#" class="text-white text-decoration-none">Liên hệ</a></li> -->
+          </ul>
+        </div>
+        <div class="col-md-3 mb-4">
+          <h5 class="fw-bold">Liên hệ</h5>
+          <ul class="list-unstyled lh-lg">
+            <li>Email: lenupstudio@gmail.com</li>
+            <li>Hotline: 089 909 00 34</li>
+            <li>Thời gian: 9h - 21h (T2 - CN)</li>
+          </ul>
+        </div>
+        <div class="col-md-3 mb-4">
+          <h5 class="fw-bold">Địa chỉ cửa hàng</h5>
+          <ul class="list-unstyled lh-lg">
+            <li><a href="https://maps.google.com/?q=123 Lê Văn Sỹ, Q.3, TP.HCM" target="_blank" class="text-white text-decoration-none store-location"><i class="fas fa-map-marker-alt me-2"></i>CN1: 123 Lê Văn Sỹ, Q.3, TP.HCM</a></li>
+            <li><a href="https://maps.google.com/?q=456 Nguyễn Trãi, Q.5, TP.HCM" target="_blank" class="text-white text-decoration-none store-location"><i class="fas fa-map-marker-alt me-2"></i>CN2: 456 Nguyễn Trãi, Q.5, TP.HCM</a></li>
+          </ul>
+        </div>
+        <div class="col-md-12 mt-4 text-center">
+          <h5 class="fw-bold mb-3">Kết nối với LENUP</h5>
+          <div class="d-flex justify-content-center gap-3">
+            <a th:href="@{https://www.facebook.com/lenupst}" class="social-icon facebook" title="Facebook" target="_blank" rel="noopener noreferrer"><i class="fab fa-facebook-f"></i></a>
+            <a th:href="@{https://www.tiktok.com/@lenupvuive}" class="social-icon tiktok" title="TikTok" target="_blank" rel="noopener noreferrer"><i class="fab fa-tiktok"></i></a>
+            <a th:href="@{https://www.instagram.com/lenup_official_store/}" class="social-icon instagram" title="Instagram" target="_blank" rel="noopener noreferrer"><i class="fab fa-instagram"></i></a>
+          </div>
+        </div>
+      </div>
+      <div class="text-center mt-5 small">
+		<a th:href="@{/policy}" class="text-white text-decoration-none">Chính sách & Điều Khoản</a>
+        <p class="mb-0 opacity-75">&copy; 2025 LENUP®. Tất cả các quyền được bảo lưu.</p>
+      </div>
+    </div>
+  </footer>
+</div>
+</body>
+</html>
